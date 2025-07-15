@@ -28,12 +28,18 @@
       <div class="main__text">
       {{card.text}}
       </div>
-      <a class="main__link" href="/index">Volver a las entradas</a>
-      <form action="{{ url_for('delete', id=card.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que querés eliminar esta entrada?')">
-        <button class="main__link" type="submit" style="margin-top: 20px; background-color: rgba(255, 0, 0, 0.2); border-color: red; color: red;">
-            Eliminar entrada
-        </button>
-    </form>
+      <ul class = "list">
+        <li>
+          <a class="main__link" href="/index">Volver a las entradas</a>
+        </li>
+        <li>
+          <form action="{{ url_for('delete', id=card.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que querés eliminar esta entrada?')">  
+            <button class="main__link" type="submit" style="margin-top: 20px; background-color: rgba(255, 0, 0, 0.2); border-color: red; color: red;">
+              Eliminar entrada
+            </button>
+          </form>
+        </li>
+      </ul>
     
     </div>
   </main>

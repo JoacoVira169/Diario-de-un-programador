@@ -328,3 +328,8 @@ ul {
     background: red;
     color: white;
 }
+
+.list {
+    display: flex;
+    justify-content: space-around;
+}
