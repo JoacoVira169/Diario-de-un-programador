@@ -2,6 +2,7 @@
 from flask import Flask, render_template,request, redirect
 # Conectando a la biblioteca de bases de datos
 from flask_sqlalchemy import SQLAlchemy
+import speech
 
 
 app = Flask(__name__)
@@ -103,6 +104,7 @@ def form_create():
         title =  request.form['title']
         subtitle =  request.form['subtitle']
         text =  request.form['text']
+        
 
         # Creación de un objeto que se enviará a la base de datos
         card = Card(title=title, subtitle=subtitle, text=text)
@@ -121,6 +123,42 @@ def delete(id):
     return redirect('/index')
 
 
+@app.route('/voice', methods=['GET', 'POST'])
+def voice():
+    if request.method == 'POST':
+        # Recuperar lo que ya estaba escrito
+        title = request.form.get('title', '')
+        subtitle = request.form.get('subtitle', '')
+        previous_text = request.form.get('text', '')
+
+        try:
+            # Reconocer voz
+            rec_word = speech.speech_es()  # tu función de STT
+            rec_word = rec_word.lower()    # opcional
+
+            # Anexar en vez de reemplazar
+            sep = '\n' if previous_text and not previous_text.endswith('\n') else ''
+            combined_text = f"{previous_text}{sep}{rec_word}"
+
+            # Devolver la misma plantilla, conservando todo
+            return render_template(
+                'create_card.html',
+                title=title,
+                subtitle=subtitle,
+                text=combined_text
+            )
+        except Exception as e:
+            # Mantener lo escrito y mostrar error
+            return render_template(
+                'create_card.html',
+                title=title,
+                subtitle=subtitle,
+                text=f"{previous_text}\n[Error al reconocer la voz: {e}]"
+            )
+    # Si alguien entra por GET a /voice, solo mostramos la plantilla vacía/actual
+    return render_template('create_card.html')
+    
+    
 
 
 
